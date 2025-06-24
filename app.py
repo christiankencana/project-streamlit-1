@@ -97,32 +97,27 @@ if age > 0:
         (60, "Pensiun", "retirement")
     ]
     
-    fig_timeline = go.Figure()
-    
+    # Tampilkan timeline sebagai tabel
+    timeline_data = []
     for milestone_age, event, category in milestones:
-        color = 'blue' if category == 'education' else 'green' if category == 'career' else 'orange'
-        opacity = 1.0 if milestone_age <= age else 0.3
-        
-        fig_timeline.add_trace(go.Scatter(
-            x=[milestone_age], y=[1],
-            mode='markers+text',
-            marker=dict(size=15, color=color, opacity=opacity),
-            text=event,
-            textposition="top center",
-            name=category,
-            showlegend=False
-        ))
+        status = "✅ Sudah" if milestone_age <= age else "⏳ Belum"
+        timeline_data.append({
+            "Umur": milestone_age,
+            "Tahapan": event,
+            "Kategori": category.title(),
+            "Status": status
+        })
     
-    fig_timeline.add_vline(x=age, line_dash="dash", line_color="red",
-                          annotation_text=f"Anda di sini ({age})")
-    fig_timeline.update_layout(
-        title="Timeline Kehidupan",
-        xaxis_title="Umur (tahun)",
-        yaxis=dict(visible=False),
-        height=300,
-        xaxis=dict(range=[0, 70])
-    )
-    st.plotly_chart(fig_timeline, use_container_width=True)
+    df_timeline = pd.DataFrame(timeline_data)
+    st.dataframe(df_timeline, use_container_width=True)
+    
+    # Progress bar untuk milestone
+    completed_milestones = len([m for m in milestones if m[0] <= age])
+    total_milestones = len(milestones)
+    progress = completed_milestones / total_milestones
+    
+    st.progress(progress)
+    st.write(f"Progress: {completed_milestones}/{total_milestones} milestone tercapai ({progress:.1%})")
 
     # 6. Rekomendasi Berdasarkan Umur
     st.subheader('💡 Rekomendasi untuk Usia Anda')
