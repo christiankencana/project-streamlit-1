@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
-import plotly.graph_objects as go
 
 # Judul aplikasi
 st.title('🧬 Life Analytics Dashboard')
@@ -71,31 +69,17 @@ if age > 0:
     st.write(f"Persentase hidup yang telah dijalani: {life_percentage:.1f}%")
     st.write(f"Estimasi tahun tersisa: {years_remaining} tahun")
 
-    # 4. Grafik Kemampuan Fisik vs Umur
+    # 4. Grafik Kemampuan Fisik vs Umur (versi sederhana)
     st.subheader('💪 Kemampuan Fisik Berdasarkan Umur')
     
     ages = list(range(0, 101, 5))
-    # Simulasi kurva kemampuan fisik (puncak di umur 25-30)
-    physical_ability = [
-        100 * np.exp(-0.5 * ((x - 27) / 15) ** 2) for x in ages
-    ]
+    physical_ability = [100 * np.exp(-0.5 * ((x - 27) / 15) ** 2) for x in ages]
     
-    fig_physical = go.Figure()
-    fig_physical.add_trace(go.Scatter(
-        x=ages, y=physical_ability,
-        mode='lines+markers',
-        name='Kemampuan Fisik (%)',
-        line=dict(color='red', width=3)
-    ))
-    fig_physical.add_vline(x=age, line_dash="dash", 
-                          annotation_text=f"Usia Anda: {age}")
-    fig_physical.update_layout(
-        title="Kemampuan Fisik vs Umur",
-        xaxis_title="Umur (tahun)",
-        yaxis_title="Kemampuan Fisik (%)",
-        height=400
-    )
-    st.plotly_chart(fig_physical, use_container_width=True)
+    df_physical = pd.DataFrame({
+        'Umur': ages,
+        'Kemampuan Fisik (%)': physical_ability
+    })
+    st.line_chart(df_physical.set_index('Umur'))
 
     # 5. Grafik Tahapan Pendidikan & Karir
     st.subheader('🎓 Timeline Pendidikan & Karir')
