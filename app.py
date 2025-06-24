@@ -155,17 +155,52 @@ if age > 0:
     for rec in recommendations:
         st.write(f"• {rec}")
 
-# Chart random (kode asli)
-st.subheader('📊 Data Random untuk Demonstrasi')
-chart_data = pd.DataFrame(
-    np.random.randn(20, 3),
-    columns=['A', 'B', 'C']
-)
-st.line_chart(chart_data)
+# Ganti bagian Chart random dengan yang lebih relevan
+st.subheader('📊 Tren Harapan Hidup Indonesia')
 
-# File uploader
-st.subheader('📁 Upload File CSV')
-uploaded_file = st.file_uploader("Upload CSV file", type="csv")
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.dataframe(df)
+# Data harapan hidup Indonesia dari tahun ke tahun
+years = [2010, 2012, 2014, 2016, 2018, 2020, 2022]
+life_expectancy_trend = [68.1, 68.6, 69.1, 69.4, 70.8, 71.1, 71.7]
+
+chart_data = pd.DataFrame({
+    'Tahun': years,
+    'Harapan Hidup': life_expectancy_trend
+})
+
+st.line_chart(chart_data.set_index('Tahun'))
+st.caption("Data harapan hidup rata-rata di Indonesia menunjukkan tren peningkatan")
+
+# Atau bisa diganti dengan grafik distribusi populasi berdasarkan umur
+st.subheader('📈 Distribusi Populasi Indonesia Berdasarkan Kelompok Umur')
+
+age_groups = ['0-14', '15-24', '25-34', '35-44', '45-54', '55-64', '65+']
+population_percentage = [24.6, 16.7, 17.0, 13.8, 11.8, 8.8, 7.3]
+
+population_data = pd.DataFrame({
+    'Kelompok Umur': age_groups,
+    'Persentase Populasi': population_percentage
+})
+
+st.bar_chart(population_data.set_index('Kelompok Umur'))
+st.caption("Distribusi populasi Indonesia berdasarkan kelompok umur (data BPS)")
+
+# Atau hapus bagian file uploader juga dan ganti dengan something more relevant
+st.subheader('🎯 Target Pencapaian Berdasarkan Dekade')
+
+decades = {
+    '20-30 tahun': ['Lulus kuliah', 'Mulai karir', 'Membangun network', 'Menikah (opsional)'],
+    '30-40 tahun': ['Naik jabatan', 'Membeli rumah', 'Punya anak (opsional)', 'Investasi serius'],
+    '40-50 tahun': ['Karir puncak', 'Pendidikan anak', 'Persiapan pensiun', 'Kesehatan optimal'],
+    '50-60 tahun': ['Mentoring junior', 'Hobi & passion', 'Persiapan pensiun', 'Wisdom sharing'],
+    '60+ tahun': ['Menikmati pensiun', 'Cucu & keluarga', 'Traveling', 'Kontribusi sosial']
+}
+
+# Tentukan dekade user saat ini
+current_decade = f"{(age//10)*10}-{((age//10)+1)*10} tahun"
+
+if current_decade in decades:
+    st.info(f"Target untuk dekade Anda ({current_decade}):")
+    for target in decades[current_decade]:
+        st.write(f"• {target}")
+else:
+    st.write("Setiap fase kehidupan memiliki target dan pencapaiannya masing-masing!")
